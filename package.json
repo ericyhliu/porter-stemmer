@@ -1,0 +1,20 @@
+{
+  "name": "porter-stemmer",
+  "version": "1.0.0",
+  "description": "JavaScript library for Porter's Stemming Algorithm.",
+  "main": "lib-es6/porterStemmer.js",
+  "scripts": {
+    "test": "babel ./lib-es6 --out-dir ./lib-es5 && gulp compress"
+  },
+  "author": "Eric Liu",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^4.6.1",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^3.0.0",
+    "pump": "^1.0.2"
+  }
+}
