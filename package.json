@@ -4,7 +4,8 @@
   "description": "JavaScript library for Porter's Stemming Algorithm.",
   "main": "lib-es6/porterStemmer.js",
   "scripts": {
-    "test": "babel ./lib-es6 --out-dir ./lib-es5 && gulp compress"
+    "start": "node ./lib-es6/porterStemmer.js",
+    "test": "babel ./lib-es6 --out-dir ./lib-es5 && gulp compress && node ./lib-es6/porterStemmer.js"
   },
   "author": "Eric Liu",
   "license": "MIT",
