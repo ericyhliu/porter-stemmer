@@ -243,6 +243,60 @@ class PorterStemmer {
         
         return w;
     }
+
+    static stemAsync(w, callback) {
+        if (w.length < 3) {
+            return callback(w, undefined);
+        }
+
+        try {
+            [
+                PorterStemmer._normalize, 
+                PorterStemmer._doStep1a,
+                PorterStemmer._doStep1b,
+                PorterStemmer._doStep1c,
+                PorterStemmer._doStep2,
+                PorterStemmer._doStep3,
+                PorterStemmer._doStep4,
+                PorterStemmer._doStep5
+            ]
+            .forEach((fn) => {
+                w = fn(w);
+            });
+
+            return callback(w, undefined);
+        } catch (e) {
+            return callback(undefined, true);
+        }
+    }
+
+    static stemAsyncPromise(w) {
+        return new Promise((resolve, reject) => {
+            if (w.length < 3) {
+                return resolve(w);
+            }
+
+            try {
+                [
+                    PorterStemmer._normalize, 
+                    PorterStemmer._doStep1a,
+                    PorterStemmer._doStep1b,
+                    PorterStemmer._doStep1c,
+                    PorterStemmer._doStep2,
+                    PorterStemmer._doStep3,
+                    PorterStemmer._doStep4,
+                    PorterStemmer._doStep5
+                ]
+                .forEach((fn) => {
+                    w = fn(w);
+                });
+
+                return resolve(w);
+            } catch (e) {
+                return reject(e);
+            }
+        });
+    }
 }
 
 module.exports = {
