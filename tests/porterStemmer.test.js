@@ -1,3 +1,12 @@
+/**
+ * 
+ * porterStemmer.test.js
+ * 
+ * This module is the test suite for the Porter's Stemmer
+ * implementation.
+ * 
+ */
+
 const expect = require('expect');
 const { PorterStemmer } = require('./../lib-es6/porterStemmer');
 const tests = require('./test-data.json');
