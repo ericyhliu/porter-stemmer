@@ -12,3 +12,44 @@ stemming algorithm first published in 1980 by Martin F. Porter in
 probabilistic information retrieval.* London: British Library. (British Library 
 Research and Development Report, no. 5587).' and the paper can be viewed
 [here](https://tartarus.org/martin/PorterStemmer/def.txt).
+
+## Usage:
+
+Minimal usage:
+
+```
+PorterStemmer.stem('someTestWord');
+```
+
+Asynchronous (callback) version:
+
+```
+PorterStemmer.stemAsync('someTestWord', (result, error) => {
+    if (error) {
+        // Handle error...
+    }
+    // Do something...
+});
+```
+
+Asynchronous (Promise) version:
+
+```
+PorterStemmer.stemAsyncPromise('someTestWord')
+.then((result) => {
+    // Do someting...
+})
+.catch((error) => {
+    // Handle error...
+});
+```
+
+## Testing
+
+Uses `babel` to transpile ES6 code to ES5 code, `gulp` to minify the ES5 code 
+and `mocha` for testing:
+
+```
+npm test
+```
+
