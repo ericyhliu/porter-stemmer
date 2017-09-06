@@ -2,7 +2,7 @@
  * 
  * porterStemmer.js
  * 
- * This module is an implementation of Porter's Stemmer Algorithm, an algorithm used to
+ * PorterStemmer module is an implementation of Porter's Stemmer Algorithm, an algorithm used to
  * remove the commoner morphological and inflexional endings from words in English, as 
  * a method of normalization in natural language processing.
  * 
@@ -12,24 +12,55 @@
 
 class PorterStemmer {
 
-    constructor() {
-        this.c = '[^aeiou]';
-        this.v = '[aeiouy]';
-        this.C = `${this.c}[^aeiouy]*`;
-        this.V = `${this.v}[aeiou]*`;
-        this.mgr0 = `^(${this.C})?${this.V}${this.C}`;
-        this.meq1 = `^(${this.C})?${this.V}${this.C}(${this.V})?$`;
-        this.mgr1 = `^(${this.C})?${this.V}${this.C}${this.V}${this.C}`;
-        this.hv = `^(${this.C})?${this.v}`;
+    constructor() {}
 
-        this.step1a = {
+    static _c() {
+        return '[^aeiou]';
+    }
+
+    static _v() {
+        return '[aeiouy]';
+    }
+
+    static _C() {
+        return `${PorterStemmer._c()}[^aeiouy]*`;
+    }
+
+    static _V() {
+        return `${PorterStemmer._v()}[aeiou]*`;
+    }
+
+    static _mgr0() {
+        return `^(${PorterStemmer._C()})?${PorterStemmer._V()}
+            ${PorterStemmer._C()}`;
+    }
+
+    static _meq1() {
+        return `^(${PorterStemmer._C()})?${PorterStemmer._V()}
+            ${PorterStemmer._C()}(${PorterStemmer._V()})?$`;
+    }
+
+    static _mgr1() {
+        return `^(${PorterStemmer._C()})?${PorterStemmer._V()}
+            ${PorterStemmer._C()}${PorterStemmer._V()}
+            ${PorterStemmer._C()}`;
+    }
+
+    static _hv() {
+        return `^(${PorterStemmer._C()})?${PorterStemmer._v()}`;
+    }
+
+    static _step1a() {
+        return {
             'sses': 'ss',
             'ies': 'i',
             'ss': 'ss',
             's': ''
         };
-    
-        this.step1b = {
+    }
+
+    static _step1b() {
+        return {
             'eed': 'ee',
             'ed': '',
             'ing': '',
@@ -37,12 +68,16 @@ class PorterStemmer {
             'bl': 'ble',
             'iz': 'ize'
         };
-    
-        this.step1c = {
+    }
+
+    static _step1c() {
+        return {
             'y': 'i'
         };
-    
-        this.step2 = {
+    }
+
+    static _step2() {
+        return {
             'ational': 'ate',
             'tional': 'tion',
             'enci': 'ence',
@@ -63,8 +98,10 @@ class PorterStemmer {
             'iviti': 'ive',
             'biliti': 'ble'
         };
-    
-        this.step3 = {
+    }
+
+    static _step3() {
+        return {
             'icate': 'ic',
             'ative': '',
             'alize': 'al',
@@ -73,8 +110,10 @@ class PorterStemmer {
             'ful': '',
             'ness': ''
         };
-    
-        this.step4 = {
+    }
+
+    static _step4() {
+        return {
             'al': '',
             'ance': '',
             'ence': '',
@@ -95,21 +134,17 @@ class PorterStemmer {
             'ive': '',
             'ize': ''
         };
-    
-        this.step5a = {
-            'e': ''
-        };
     }
 
-    normalize(w) {
+    static _normalize(w) {
         return w.toLowerCase().replace(/[^a-zA-Z]+/g, '');
     }
 
-    hasDuplicatedLastLetter(w) {
+    static _hasDuplicatedLastLetter(w) {
         return w[w.length - 1] && w[w.length - 2] &&  w[w.length - 1] === w[w.length - 2];
     }
 
-    hasEndingCVC(w) {
+    static _hasEndingCVC(w) {
         return w[w.length - 1] && w[w.length - 2] && 
         w[w.length - 3] && 
         /[^aeiou]/.test(w[w.length - 3]) && 
@@ -117,8 +152,8 @@ class PorterStemmer {
         /[aeiouy]/.test(w[w.length - 2]);
     }
 
-    doStep1a(w) {
-        let step1aMatch = Object.keys(this.step1a)
+    static _doStep1a(w) {
+        let step1aMatch = Object.keys(PorterStemmer._step1a())
         .filter((s) => {
             return new RegExp(`${s}$`).test(w)
         })
@@ -128,24 +163,24 @@ class PorterStemmer {
 
         if (step1aMatch) {
             w = w.replace(new RegExp(`${step1aMatch}$`), 
-                this.step1a[step1aMatch]);
+                PorterStemmer._step1a()[step1aMatch]);
         }
         return w;
     }
 
-    doStep1b(w) {
+    static _doStep1b(w) {
         // Part 1:
         let doPart2 = false;
-        if (w.endsWith('eed') && (new RegExp(this.mgr0).test(w.substr(0, 
+        if (w.endsWith('eed') && (new RegExp(PorterStemmer._mgr0()).test(w.substr(0, 
             w.lastIndexOf('eed'))))) {
-            w = w.replace(new RegExp('eed$'), this.step1b['eed']);
-        } else if (w.endsWith('ed') && (new RegExp(this.hv).test(w.substr(0, 
+            w = w.replace(new RegExp('eed$'), PorterStemmer._step1b()['eed']);
+        } else if (w.endsWith('ed') && (new RegExp(PorterStemmer._hv()).test(w.substr(0, 
             w.lastIndexOf('ed'))))) {
-            w = w.replace(new RegExp('ed$'), this.step1b['ed']);
+            w = w.replace(new RegExp('ed$'), PorterStemmer._step1b()['ed']);
             doPart2 = true;
-        } else if (w.endsWith('ing') && (new RegExp(this.hv).test(w.substr(0, 
+        } else if (w.endsWith('ing') && (new RegExp(PorterStemmer._hv()).test(w.substr(0, 
             w.lastIndexOf('ing'))))) {
-            w = w.replace(new RegExp('ing$'), this.step1b['ing']);
+            w = w.replace(new RegExp('ing$'), PorterStemmer._step1b()['ing']);
             doPart2 = true;
         }
 
@@ -153,38 +188,38 @@ class PorterStemmer {
         // above is applied:
         if (doPart2) {
             if (w.endsWith('at')) {
-                w = w.replace(new RegExp('at$'), this.step1b['at']);
+                w = w.replace(new RegExp('at$'), PorterStemmer._step1b()['at']);
             } else if (w.endsWith('bl')) {
-                w = w.replace(new RegExp('bl$'), this.step1b['bl']);
+                w = w.replace(new RegExp('bl$'), PorterStemmer._step1b()['bl']);
             } else if (w.endsWith('iz')) {
-                w = w.replace(new RegExp('iz$'), this.step1b['iz']);
-            } else if (this.hasDuplicatedLastLetter(w) && 
+                w = w.replace(new RegExp('iz$'), PorterStemmer._step1b()['iz']);
+            } else if (PorterStemmer._hasDuplicatedLastLetter(w) && 
                 !(w.endsWith('l') || 
                   w.endsWith('s') ||
                   w.endsWith('z'))) {
                 const c = w[w.length - 1];
                 w = w.replace(new RegExp(`${c}${c}$`), c);
-            } else if (this.hasEndingCVC(w) && (new RegExp(this.meq1).test(w))) {
+            } else if (PorterStemmer._hasEndingCVC(w) && (new RegExp(PorterStemmer._meq1()).test(w))) {
                 w += 'e';
             }
         }
         return w;
     }
 
-    doStep1c(w) {
-        if (w.endsWith('y') && (new RegExp(this.hv).test(w.substr(0, 
+    static _doStep1c(w) {
+        if (w.endsWith('y') && (new RegExp(PorterStemmer._hv()).test(w.substr(0, 
             w.lastIndexOf('y'))))) {
-            w = w.replace(new RegExp('y$'), this.step1c['y']);
+            w = w.replace(new RegExp('y$'), PorterStemmer._step1c()['y']);
         }
         return w;
     }
 
-    doStep2(w) {
-        let step2Match = Object.keys(this.step2)
+    static _doStep2(w) {
+        let step2Match = Object.keys(PorterStemmer._step2())
         .filter((s) => {
             const last = w.lastIndexOf(s);
             return (last === -1) ? false : 
-                new RegExp(this.mgr0).test(w.substr(0, last));
+                new RegExp(PorterStemmer._mgr0()).test(w.substr(0, last));
         })
         .reduce((previous, current) => {
             return (previous.length > current.length) ? previous : current;
@@ -192,17 +227,17 @@ class PorterStemmer {
 
         if (step2Match) {
             w = w.replace(new RegExp(`${step2Match}$`), 
-                this.step2[step2Match]);
+                PorterStemmer._step2()[step2Match]);
         }
         return w;
     }
 
-    doStep3(w) {
-        let step3Match = Object.keys(this.step3)
+    static _doStep3(w) {
+        let step3Match = Object.keys(PorterStemmer._step3())
         .filter((s) => {
             const last = w.lastIndexOf(s);
             return (last === -1) ? false : 
-                new RegExp(this.mgr0).test(w.substr(0, last));
+                new RegExp(PorterStemmer._mgr0()).test(w.substr(0, last));
         })
         .reduce((previous, current) => {
             return (previous.length > current.length) ? previous : current;
@@ -210,23 +245,23 @@ class PorterStemmer {
 
         if (step3Match) {
             w = w.replace(new RegExp(`${step3Match}$`), 
-                this.step3[step3Match]);
+                PorterStemmer._step3()[step3Match]);
         }
         return w;
     }
 
-    doStep4(w) {
-        let step4Match = Object.keys(this.step4)
+    static _doStep4(w) {
+        let step4Match = Object.keys(PorterStemmer._step4())
         .filter((s) => {
             const last = w.lastIndexOf(s);
             // Handle case of (m > 1 && (*s or *t)) 'ION' -> <null>
             if (s === 'ion') {
                 const pre = w.substr(0, last);
-                return (last === -1) ? false : new RegExp(this.mgr1).test(pre)
+                return (last === -1) ? false : new RegExp(PorterStemmer._mgr1()).test(pre)
                     && (pre.endsWith('s') || pre.endsWith('t'));
             }
             return (last === -1) ? false : 
-                new RegExp(this.mgr1).test(w.substr(0, last));
+                new RegExp(PorterStemmer._mgr1()).test(w.substr(0, last));
         })
         .reduce((previous, current) => {
             return (previous.length > current.length) ? previous : current;
@@ -234,49 +269,52 @@ class PorterStemmer {
 
         if (step4Match) {
             w = w.replace(new RegExp(`${step4Match}$`), 
-                this.step4[step4Match]);
+                PorterStemmer._step4()[step4Match]);
         }
         return w;
     }
 
-    doStep5a(w) {
-        if (w.endsWith('e') && (new RegExp(this.mgr1).test(w.substr(0, 
+    static _doStep5a(w) {
+        if (w.endsWith('e') && (new RegExp(PorterStemmer._mgr1()).test(w.substr(0, 
             w.lastIndexOf('e'))))) {
             w = w.slice(0, -1);
-        } else if (w.endsWith('e') && !(this.hasEndingCVC(w.slice(0, -1))) && 
-            (new RegExp(this.meq1).test(w.substr(0, w.lastIndexOf('e'))))) {
+        } else if (w.endsWith('e') && !(PorterStemmer._hasEndingCVC(w.slice(0, -1))) && 
+            (new RegExp(PorterStemmer._meq1()).test(w.substr(0, w.lastIndexOf('e'))))) {
             w = w.slice(0, -1);
         }
         return w;
     }
 
-    doStep5b(w) {
-        if (w.endsWith('l') && this.hasDuplicatedLastLetter(w) && 
-            (new RegExp(this.mgr1).test(w.substr(0, w.length - 1)))) {
+    static _doStep5b(w) {
+        if (w.endsWith('l') && PorterStemmer._hasDuplicatedLastLetter(w) && 
+            (new RegExp(PorterStemmer._mgr1()).test(w.substr(0, w.length - 1)))) {
             const c = w[w.length - 1];
             w = w.replace(new RegExp(`${c}${c}$`), c);
         }
         return w;
     }
 
-    stem(w) {
-        w = this.normalize(w);
-        w = this.doStep1a(w);
-        w = this.doStep1b(w);
-        w = this.doStep1c(w);
-        w = this.doStep2(w);
-        w = this.doStep3(w);
-        w = this.doStep4(w);
-        w = this.doStep5a(w);
-        w = this.doStep5b(w);
+    static stem(w) {
+        const fnlist = [
+            PorterStemmer._normalize, 
+            PorterStemmer._doStep1a,
+            PorterStemmer._doStep1b,
+            PorterStemmer._doStep1c,
+            PorterStemmer._doStep2,
+            PorterStemmer._doStep3,
+            PorterStemmer._doStep4,
+            PorterStemmer._doStep5a,
+            PorterStemmer._doStep5b
+        ];
+
+        fnlist.forEach((fn) => {
+            w = fn(w);
+        });
 
         console.log(w);
         return w;
     }
 }
-
-let p = new PorterStemmer();
-p.stem('roll');
 
 module.exports = {
     PorterStemmer
