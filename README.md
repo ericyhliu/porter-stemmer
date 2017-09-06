@@ -1,4 +1,4 @@
-# Porter's Stemming Algorithm
+# Porter's Stemmer
 
 In natural language processing, stemming is used to reduce a word to their
 stem, which is the word in some root form. For example, we say that the words
