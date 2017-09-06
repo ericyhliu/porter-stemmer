@@ -2,7 +2,7 @@
  * 
  * porterStemmer.js
  * 
- * PorterStemmer module is an implementation of Porter's Stemmer Algorithm, an 
+ * This module is an implementation of Porter's Stemmer Algorithm, an 
  * algorithm used to remove the commoner morphological and inflexional endings 
  * from words in English, as a method of normalization in natural language 
  * processing.
@@ -245,6 +245,11 @@ class PorterStemmer {
     }
 
     static stemAsync(w, callback) {
+        // Still need w == '' because null string is still valid
+        if (typeof(w) !== 'string') {
+            return callback(undefined, w);
+        }
+
         if (w.length < 3) {
             return callback(w, undefined);
         }
@@ -272,6 +277,11 @@ class PorterStemmer {
 
     static stemAsyncPromise(w) {
         return new Promise((resolve, reject) => {
+            // Still need w == '' because null string is still valid
+            if (typeof(w) !== 'string') {
+                return reject();
+            }
+
             if (w.length < 3) {
                 return resolve(w);
             }
