@@ -1,11 +1,11 @@
 {
   "name": "porter-stemmer",
   "version": "1.0.0",
-  "description": "JavaScript library for Porter's Stemming Algorithm.",
+  "description": "JavaScript library for Porter's Stemmer.",
   "main": "lib-es6/porterStemmer.js",
   "scripts": {
     "start": "node ./lib-es6/porterStemmer.js",
-    "test": "babel ./lib-es6 --out-dir ./lib-es5 && gulp compress && mocha **/*.test.js"
+    "test": " "
   },
   "author": "Eric Liu",
   "license": "MIT",
