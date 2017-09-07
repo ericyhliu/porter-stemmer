@@ -8,7 +8,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * 
  * porterStemmer.js
  * 
- * PorterStemmer module is an implementation of Porter's Stemmer Algorithm, an 
+ * This module is an implementation of Porter's Stemmer Algorithm, an 
  * algorithm used to remove the commoner morphological and inflexional endings 
  * from words in English, as a method of normalization in natural language 
  * processing.
@@ -254,6 +254,52 @@ var PorterStemmer = function () {
             });
 
             return w;
+        }
+    }, {
+        key: 'stemAsync',
+        value: function stemAsync(w, callback) {
+            // Still need w == '' because null string is still valid
+            if (typeof w !== 'string') {
+                return callback(undefined, w);
+            }
+
+            if (w.length < 3) {
+                return callback(w, undefined);
+            }
+
+            try {
+                [PorterStemmer._normalize, PorterStemmer._doStep1a, PorterStemmer._doStep1b, PorterStemmer._doStep1c, PorterStemmer._doStep2, PorterStemmer._doStep3, PorterStemmer._doStep4, PorterStemmer._doStep5].forEach(function (fn) {
+                    w = fn(w);
+                });
+
+                return callback(w, undefined);
+            } catch (e) {
+                return callback(undefined, true);
+            }
+        }
+    }, {
+        key: 'stemAsyncPromise',
+        value: function stemAsyncPromise(w) {
+            return new Promise(function (resolve, reject) {
+                // Still need w == '' because null string is still valid
+                if (typeof w !== 'string') {
+                    return reject();
+                }
+
+                if (w.length < 3) {
+                    return resolve(w);
+                }
+
+                try {
+                    [PorterStemmer._normalize, PorterStemmer._doStep1a, PorterStemmer._doStep1b, PorterStemmer._doStep1c, PorterStemmer._doStep2, PorterStemmer._doStep3, PorterStemmer._doStep4, PorterStemmer._doStep5].forEach(function (fn) {
+                        w = fn(w);
+                    });
+
+                    return resolve(w);
+                } catch (e) {
+                    return reject(e);
+                }
+            });
         }
     }]);
 
