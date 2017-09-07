@@ -13,7 +13,7 @@ probabilistic information retrieval.* London: British Library. (British Library
 Research and Development Report, no. 5587).' and the paper can be viewed
 [here](https://tartarus.org/martin/PorterStemmer/def.txt).
 
-## Usage:
+## Usage
 
 Minimal usage:
 
